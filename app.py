@@ -199,12 +199,60 @@ def product_detail(product_id):
 
     is_best_brand = product.get('우수브랜드', 0) == 1  # True or False
 
+    discount_names = ['오이', '콩나물', '양파']
+    is_discount_item = any(name in product['name'] for name in discount_names)
+
+    discount_price = None
+    if is_discount_item:
+        discount_price = round(product['price'] * 0.9)
+
+    low_delay_products = []
+
+    if delay_prob is not None and delay_prob >= 30:
+        same_category_df = product_df[product_df['물품대분류'] == product['물품대분류']].copy()
+
+        # 지연율 계산
+        results = []
+        for _, row in same_category_df.iterrows():
+            if row['product_id'] == product['product_id']:
+                continue  # 본인 제외
+
+            try:
+                pred_prob = delay_prediction.predict_delay(
+                    time_segment=time_segment,
+                    day_of_week=day_of_week,
+                    category=row['카테고리 분류'],
+                    eco_flag=row['친환경'],
+                    fresh_flag=row['신선'],
+                    damaged_flag=row['파손/외관 손상 등 위험']
+                )
+                if pred_prob <= 30:
+                    results.append({
+                        'product_id': row['product_id'],
+                        'name': row['name'],
+                        'price': row['price'],
+                        'delay_prob': pred_prob
+                    })
+            except:
+                continue
+
+        # 가장 낮은 지연율 순으로 3개
+        low_delay_products = sorted(results, key=lambda x: x['delay_prob'])[:3]
+
+        print("🟡 지연율 높은 제품:", product['name'], "→ 지연율:", delay_prob)
+        print("🔵 동일 카테고리 내 저지연 제품 후보 수:", len(low_delay_products))
+        for item in low_delay_products:
+            print("    🔹", item['name'], "지연율:", item['delay_prob'])
+
     return render_template(
         'product_detail.html',
         product=product,
         related_products=related_products,
         delay_prob=delay_prob,
-        is_best_brand=is_best_brand
+        is_best_brand=is_best_brand,
+        is_discount_item=is_discount_item,
+        discount_price=discount_price,
+        low_delay_products=low_delay_products
     )
 
 

@@ -201,6 +201,12 @@
                 </p>
                 {% endif %}
 
+                {% if is_discount_item %}
+                <p style="margin-top: 10px; font-size: 16px; font-weight: bold; color: #2e7d32;">
+                    🎉 구독 고객의 경우 10% 할인! → {{ "{:,.0f}".format(discount_price) }} 원
+                </p>
+                {% endif %}               
+
             </div>
         </div>
 
@@ -211,6 +217,26 @@
             <a href="{{ url_for('wishlist') }}" class="view-cart">🧺 장바구니 보기</a>
         </div>
 
+        <div class="related-section">
+            {% if low_delay_products|length > 0 %}
+                <h3>📦 배송 지연 가능성이 낮은 유사 상품!</h3>
+                <div class="related-list">
+                    {% for p in low_delay_products %}
+                    <div class="related-item">
+                        <a href="{{ url_for('product_detail', product_id=p.product_id) }}">
+                            <img src="{{ url_for('static', filename='images/' + p.product_id + '.jpg') }}">
+                            <div>{{ p.name }}</div>
+                            <div>{{ "{:,.0f}".format(p.price) }} 원</div>
+                            <div style="font-size: 13px; color: #888;">지연율: {{ p.delay_prob }}%</div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <h3>📦 유사한 저지연 상품을 찾지 못했습니다.</h3>
+            {% endif %}
+        </div>
+        
 
         <div class="related-section">
             <h3>다른 고객이 함께 본 상품! 이런 제품은 어떠세요?</h3>
