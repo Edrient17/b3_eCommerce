@@ -180,6 +180,11 @@
     {% endwith %}
     <div class="container">
         <h1>{{ product['name'] }}</h1>
+        <h2 style="margin-bottom: 10px;">
+            {% if is_best_brand %}
+                <span style="font-size: 16px; color: #2e7d32; margin-left: 10px;">⭐ 우수 브랜드!</span>
+            {% endif %}
+        </h2>
 
         <div class="product-info">
             <img src="{{ url_for('static', filename='images/' ~ product['product_id'] ~ '.jpg') }}"

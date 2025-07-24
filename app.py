@@ -197,11 +197,14 @@ def product_detail(product_id):
         print("❗예측 오류:", e)
         delay_prob = None
 
+    is_best_brand = product.get('우수브랜드', 0) == 1  # True or False
+
     return render_template(
         'product_detail.html',
         product=product,
         related_products=related_products,
-        delay_prob=delay_prob
+        delay_prob=delay_prob,
+        is_best_brand=is_best_brand
     )
 
 
@@ -368,5 +371,6 @@ def add_to_cart(product_id):
     return redirect(url_for('product_detail', product_id=product_id))
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
