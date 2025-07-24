@@ -5,7 +5,6 @@ import ast
 
 # 데이터 로드
 product_df = pd.read_csv("./data/Product_Data_2차전처리완료.csv", encoding="euc-kr")
-sales_df = pd.read_csv("./data/Sales_Data_2차전처리완료.csv", encoding="euc-kr")
 order_summary_df = pd.read_csv("./data/주문_요약_분석(6번째).csv", encoding="utf-8")
 
 # 이름 매핑

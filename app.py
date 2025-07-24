@@ -54,8 +54,12 @@ preferred_products = {
 
 @app.route('/organic')
 def organic():
-    eco_products = product_df[product_df['친환경'] == 1][['product_id', 'name', 'price']].copy()
-    return render_template('organic.html', products=eco_products.to_dict(orient='records'))
+    new_brands = product_df[product_df['친환경전용관'] == 1][['product_id', 'name', 'price']]
+    eco_products = product_df[(product_df['친환경'] == 1) & (product_df['친환경전용관'] != 1)][['product_id', 'name', 'price']]
+
+    return render_template('organic.html',
+                           new_brands=new_brands.to_dict(orient='records'),
+                           products=eco_products.to_dict(orient='records'))
 
 
 @app.route('/')

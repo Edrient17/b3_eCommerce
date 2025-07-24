@@ -58,7 +58,7 @@
 
         .back {
             display: block;
-            text-align: center;
+            text-align: right;
             margin-top: 40px;
             color: #2d5d34;
             text-decoration: underline;
@@ -68,6 +68,22 @@
 <body>
 
 <h2>🌿 친환경 전용관</h2>
+<hr style="margin: 40px 0; border: none; border-top: 2px solid #cce5cc;">
+<a href="{{ url_for('home') }}" class="back">← 메인 페이지로 돌아가기</a>
+<h2>🎉 신규 브랜드 입점!</h2>
+<div class="grid">
+    {% for product in new_brands %}
+    <div class="product-card">
+        <a href="{{ url_for('product_detail', product_id=product['product_id']) }}">
+            <img src="{{ url_for('static', filename='images/' + product['product_id'] + '.jpg') }}" alt="{{ product['name'] }}">
+            <p><strong>{{ product['name'] }}</strong></p>
+            <p>{{ "{:,.0f}".format(product['price']) }} 원</p>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+<hr style="margin: 40px 0; border: none; border-top: 2px solid #cce5cc;">
 <div class="grid">
     {% for product in products %}
     <div class="product-card">
@@ -80,6 +96,6 @@
     {% endfor %}
 </div>
 
-<a href="{{ url_for('home') }}" class="back">← 메인 페이지로 돌아가기</a>
+
 </body>
 </html>
