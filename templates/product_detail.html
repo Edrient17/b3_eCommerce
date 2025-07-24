@@ -180,8 +180,7 @@
     {% endwith %}
     <div class="container">
         <h1>{{ product['name'] }}</h1>
-        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px;">
-            <h1 style="margin: 0;">{{ product['name'] }}</h1>
+        <div style="display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin-bottom: 20px;">
             {% if is_best_brand %}
                 <div>🌟 우수 브랜드</div>
             {% endif %}
