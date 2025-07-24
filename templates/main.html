@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>메인 페이지</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f9f2;
+            color: #2e3d2f;
+        }
+
+        .navbar {
+            background-color: #a8d5ba;
+            color: #2c4933;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar a {
+            color: #2c4933;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        h2 {
+            margin-top: 40px;
+            text-align: center;
+            color: #2c4933;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin: 30px;
+        }
+
+        .product-card {
+            background-color: #ffffff;
+            border: 1px solid #cce5cc;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .product-card a {
+            text-decoration: none;
+            color: #2c4933;
+        }
+        .product-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .product-card p {
+            margin: 5px 0;
+        }
+
+        .banner {
+            margin: 30px;
+        }
+
+        
+        .banner-container {
+            display: flex;
+            padding: 30px;
+            background-color: #e8f5e9;
+            border-radius: 12px;
+            max-width: 1200px;
+            margin: 20px auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .banner-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 200px;
+        }
+
+        .banner-menu li {
+            padding: 12px;
+            margin-bottom: 10px;
+            background-color: #c8e6c9;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .banner-menu li:hover {
+            background-color: #a5d6a7;
+            font-weight: bold;
+        }
+
+        .main-banner {
+            flex-grow: 1;
+            margin-left: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-banner img {
+            width: 100%;
+            max-width: 900px;
+            height: 300px; /* 또는 300px 등 적절한 높이 */
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .section-divider {
+            border-top: 2px solid #c8e6c9;
+            margin: 40px auto;
+            max-width: 1800px;
+        }
+        .search-wrapper {
+            position: relative;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .search-form {
+            display: inline-block;
+        }
+
+        .search-form input {
+            padding: 10px;
+            width: 300px;
+            border-radius: 8px;
+            border: 1px solid #aaa;
+        }
+
+        .search-form button {
+            padding: 10px 20px;
+            background-color: #a5d6a7;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .cart-button {
+            position: absolute;
+            top: 50%;
+            left: calc(50% + 200px); /* 검색 버튼 기준 오른쪽 위치 */
+            transform: translateY(-50%);
+            padding: 10px 20px;
+            background-color: #2d5d34;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .cart-button:hover {
+            background-color: #1e4023;
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <div><strong>🥬 친환경 마켓</strong></div>
+        <div>
+            {% if username %}
+                <span>{{ username }}님 환영합니다</span>
+                {% if username == 'admin' %}
+                    <a href="{{ url_for('users') }}">관리자 기능</a>
+                {% endif %}
+                <a href="{{ url_for('mypage') }}">My Page</a>
+                <a href="{{ url_for('logout') }}">로그아웃</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">로그인</a>
+                <a href="{{ url_for('signup') }}">회원가입</a>
+            {% endif %}
+        </div>
+        
+    </div>
+
+    <div class="search-wrapper">
+        <form action="{{ url_for('search') }}" method="GET" class="search-form">
+            <input type="text" name="query" placeholder="카테고리 검색 (예: 과일)">
+            <button type="submit">검색</button>
+        </form>
+
+        <a href="{{ url_for('wishlist') }}" class="cart-button">🧺 장바구니 보기</a>
+    </div>
+
+
+    <div>
+        <div class="banner-container">
+        <ul class="banner-menu">
+            {% for item in banner_list %}
+                <li data-img="{{ item.filename }}" {% if item.link %}data-link="{{ item.link }}"{% endif %}>
+                    {{ item.label }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="main-banner">
+            <a id="main-banner-link" href="{{ banner_list[0].link if banner_list[0].link else '#' }}">
+                <img id="main-banner-img"
+                    src="{{ url_for('static', filename='banners/' + banner_list[0].filename) }}"
+                    alt="배너">
+            </a>
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    {% if banner_products %}
+    <h2>{{ banner_title }}</h2>
+    <div class="grid banner">
+        {% for product in banner_products %}
+        <div class="product-card">
+            <a href="{{ url_for('product_detail', product_id=product['product_id']) }}">
+                <img src="{{ url_for('static', filename='images/' + product['product_id'] + '.jpg') }}" alt="{{ product['name'] }}">
+                <p><strong>{{ product['name'] }}</strong></p>
+                <p>{{ "{:,.0f}".format(product['price']) }} 원</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="section-divider"></div>
+    
+    <h2>오늘 마켓이 엄선한 가장 HOT한 상품!</h2>
+    <div class="grid">
+        {% for product in products %}
+        <div class="product-card">
+            <a href="{{ url_for('product_detail', product_id=product['product_id']) }}">
+                <img src="{{ url_for('static', filename='images/' + product['product_id'] + '.jpg') }}" alt="{{ product['name'] }}">
+                <p><strong>{{ product['name'] }}</strong></p>
+                <p>{{ "{:,.0f}".format(product['price']) }} 원</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+
+<script id="banner-data" type="application/json">
+    {{ banner_list | tojson }}
+</script>
+
+<script>
+    const bannerImgEl = document.getElementById('main-banner-img');
+    const bannerLinkEl = document.getElementById('main-banner-link');
+
+    const banners = JSON.parse(document.getElementById("banner-data").textContent);
+
+    document.querySelectorAll('.banner-menu li').forEach((item, index) => {
+        item.addEventListener('mouseenter', () => {
+            const newImg = item.getAttribute('data-img');
+            const newLink = item.getAttribute('data-link') || '#';
+            bannerImgEl.src = `/static/banners/${newImg}`;
+            bannerLinkEl.href = newLink;
+        });
+    });
+</script>
+
+</html>

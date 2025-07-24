@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>장바구니</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7fcf7;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d5d34;
+        }
+
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .product-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background-color: #ffffff;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .product-item img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .product-info {
+            flex-grow: 1;
+        }
+
+        .product-info p {
+            margin: 4px 0;
+        }
+
+        .product-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #2d5d34;
+        }
+
+        .bottom-purchase {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        #purchase-button {
+            padding: 12px 28px;
+            background-color: #2d5d34;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        #purchase-button.clicked {
+            background-color: gray;
+        }
+        .clear-button {
+            padding: 12px 28px;
+            background-color: #a83535;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .clear-button:hover {
+            background-color: #842323;
+        }
+        .recommend-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .recommend-grid .product-item {
+            flex-direction: column;
+            align-items: center;
+            width: 180px;
+            height: 240px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .recommend-grid .product-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .recommend-grid .product-info {
+            margin-top: 8px;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #2d5d34;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .back-button:hover {
+            background-color: #1e4023;
+        }
+
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div style="background-color: #e8f5e9; padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                {% for message in messages %}
+                    <p style="color: #2d5d34;">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <h1>장바구니 현황</h1>
+
+    <form method="post" action="{{ url_for('handle_cart_action') }}">
+        <div class="product-list">
+            {% for item in cart_items %}
+            <div class="product-item">
+                <a href="{{ url_for('product_detail', product_id=item.product_id) }}">
+                    <img src="{{ url_for('static', filename='images/' + item.product_id + '.jpg') }}" alt="{{ item.name }}">
+                </a>
+                <div class="product-info">
+                    <p><strong>{{ item.name }}</strong></p>
+                    <p>{{ "{:,.0f}".format(item.price) }} 원</p>
+                </div>
+                <!-- 체크박스 -->
+                <input type="checkbox" name="selected" value="{{ item.product_id }}" class="product-checkbox">
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="bottom-purchase" style="display: flex; justify-content: center; gap: 20px; margin-top: 40px;">
+            <button type="submit" name="action" value="clear" class="clear-button">🗑 장바구니 비우기</button>
+            <button type="submit" name="action" value="purchase" id="purchase-button">🛒 구매하기</button>
+        </div>
+    </form>
+
+    <div style="text-align: center; margin-top: 60px;">
+        <a href="{{ url_for('home') }}" class="back-button">← 메인 페이지로 돌아가기</a>
+    </div>
+
+    <script>
+        document.getElementById("purchase-button").addEventListener("click", function () {
+            this.classList.toggle("clicked");
+        });
+    </script>
+
+
+    {% if recommendations %}
+        <h2 style="text-align:center; color:#2d5d34; margin-top:60px;">다른 고객이 함께 구매했어요!</h2>
+        <div class="recommend-grid">
+            {% for item in recommendations %}
+            <div class="product-item">
+                <a href="{{ url_for('product_detail', product_id=item.product_id) }}">
+                    <img src="{{ url_for('static', filename='images/' + item.product_id + '.jpg') }}" alt="{{ item.name }}">
+                </a>
+                <div class="product-info">
+                    <p><strong>{{ item.name }}</strong></p>
+                    <p>{{ "{:,.0f}".format(item.price) }} 원</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</body>
+</html>

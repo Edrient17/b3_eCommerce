@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product['name'] }} 상세</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f9f0; /* 파스텔 톤 녹색 배경 */
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d5d34;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-info {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .product-info img {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .details {
+            flex-grow: 1;
+        }
+
+        .details p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .related-section {
+            margin-top: 50px;
+        }
+
+        .related-section h3 {
+            color: #2d5d34;
+        }
+
+        .related-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .related-item {
+            border: 1px solid #cce5cc;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            width: 160px;
+            background-color: #f9fff9;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .related-item:hover {
+            transform: translateY(-4px);
+        }
+
+        .related-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        a {
+            color: #2d5d34;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .back {
+            display: block;
+            margin-top: 40px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .add-to-cart {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #2d5d34;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .add-to-cart:hover {
+            background-color: #1e4023;
+        }
+        
+        .flash-box {
+            background-color: #e0f3e0;
+            border: 1px solid #b4ddb4;
+            color: #2d5d34;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .cart-button-wrapper {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-group {
+            margin-top: 20px;
+            text-align: right;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .add-to-cart,
+        .view-cart {
+            padding: 10px 20px;
+            background-color: #2d5d34;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            line-height: 1.4; /* 버튼의 텍스트 높이에 맞추기 */
+            vertical-align: middle; /* 버튼과 정렬 */
+            height: 42px; /* 버튼 높이 강제 지정 (폼 제출 버튼 기준) */
+            box-sizing: border-box; /* 패딩 포함 계산 */
+            margin-top: 2px;
+        }
+
+        .add-to-cart:hover,
+        .view-cart:hover {
+            background-color: #1e4023;
+        }
+
+
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-box">
+                {% for message in messages %}
+                    {% if message != "로그인 성공!" %}
+                        <p>{{ message }}</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <div class="container">
+        <h1>{{ product['name'] }}</h1>
+
+        <div class="product-info">
+            <img src="{{ url_for('static', filename='images/' ~ product['product_id'] ~ '.jpg') }}"
+                 alt="{{ product['name'] }}">
+            <div class="details">
+                <p><strong>제품번호:</strong> {{ product['product_id'] }}</p>
+                <p><strong>가격:</strong> {{ "{:,.0f}".format(product['price']) }} 원</p>
+                <p><strong>설명:</strong> {{ product.get('설명', '설명 없음') }}</p>
+                <p><strong>물품 분류:</strong> {{ product['대분류'] }} {{ product['소분류'] }}</p>
+                
+                {% if delay_prob is not none %}
+                <p style="margin-top: 16px; font-size: 17px; font-weight: bold; color: #cc3333;">
+                    🚚 현재 배송 지연 가능성: {{ delay_prob }}%
+                </p>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <div class="button-group">
+            <form action="{{ url_for('add_to_cart', product_id=product['product_id']) }}" method="post" style="display:inline;">
+                <button type="submit" class="add-to-cart">🛒 장바구니에 담기</button>
+            </form>
+            <a href="{{ url_for('wishlist') }}" class="view-cart">🧺 장바구니 보기</a>
+        </div>
+
+
+        <div class="related-section">
+            <h3>다른 고객이 함께 본 상품! 이런 제품은 어떠세요?</h3>
+            {% if related_products %}
+            <div class="related-list">
+                {% for rp in related_products %}
+                <div class="related-item">
+                    <a href="{{ url_for('product_detail', product_id=rp.product_id) }}">
+                        <img src="{{ url_for('static', filename='images/' + rp.product_id + '.jpg') }}">
+                        <div>{{ rp.name }}</div>
+                        <div>{{ "{:,.0f}".format(rp.price) }} 원</div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+                <p>연관 추천 상품이 없습니다.</p>
+            {% endif %}
+        </div>
+
+        <a href="{{ url_for('home') }}" class="back">← 메인으로 돌아가기</a>
+    </div>
+</body>
+</html>

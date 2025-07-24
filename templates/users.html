@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>가입한 사용자 목록</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4fdf5;
+            margin: 0;
+            padding: 0;
+            color: #2e3d2f;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c4933;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #cde5cd;
+        }
+
+        th {
+            background-color: #a8d5ba;
+            color: #2c4933;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9fdf9;
+        }
+
+        tr:hover {
+            background-color: #e7f5ea;
+        }
+
+        a.button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #6fbf73;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        a.button:hover {
+            background-color: #58a75e;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>가입한 사용자 목록</h1>
+
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>아이디</th>
+                <th>성별</th>
+                <th>나이</th>
+                <th>카드</th>
+                <th>지역</th>
+                <th>하위 지역</th>
+                <th>최근 방문일수 (Recency)</th>
+            </tr>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.gender }}</td>
+                <td>{{ user.age }}</td>
+                <td>{{ user.card }}</td>
+                <td>{{ user.region }}</td>
+                <td>{{ user.subregion }}</td>
+                <td>{{ user.recency }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <div class="button-container">
+            <a class="button" href="{{ url_for('home') }}">메인으로 돌아가기</a>
+        </div>
+    </div>
+</body>
+</html>
