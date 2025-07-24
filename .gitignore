@@ -1,5 +1,3 @@
 __pycache__/
 *.pyc
-*.pkl
-*.csv
 .env
