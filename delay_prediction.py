@@ -1,9 +1,7 @@
-import numpy as np
 import pandas as pd
 from xgboost import XGBClassifier
 from sklearn.preprocessing import LabelEncoder
 import joblib
-import os
 
 # 모델 훈련용 함수 (최초 1회 실행 후 저장만 하면 됨)
 def train_and_save_model():

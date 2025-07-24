@@ -1,4 +1,7 @@
 Flask
-pymysql
 gunicorn
+pymysql
 pandas
+scikit-learn
+xgboost
+joblib
