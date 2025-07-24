@@ -21,7 +21,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        h1 {
+        h1, h2 {
             text-align: center;
             color: #2c4933;
             margin-bottom: 30px;
@@ -74,13 +74,38 @@
     </style>
 </head>
 <body>
+
+    <div class="container">
+        <h2>📦 택배사 점수 관리</h2>
+        <table>
+            <tr>
+                <th>택배사</th>
+                <th>현재 점수</th>
+                <th>점수 변동</th>
+                <th>반영</th>
+            </tr>
+            {% for d in delivery_list %}
+            <tr>
+                <form action="{{ url_for('update_delivery_score') }}" method="post">
+                    <td>
+                        {{ d.name }}
+                        <input type="hidden" name="name" value="{{ d.name }}">
+                    </td>
+                    <td>{{ d.score }}</td>
+                    <td><input type="number" name="change" required style="width: 60px;"></td>
+                    <td><button type="submit">확인</button></td>
+                </form>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
     <div class="container">
         <h1>가입한 사용자 목록</h1>
 
         <table>
             <tr>
                 <th>ID</th>
-                <th>아이디</th>
                 <th>성별</th>
                 <th>나이</th>
                 <th>카드</th>
@@ -91,7 +116,6 @@
             {% for user in users %}
             <tr>
                 <td>{{ user.id }}</td>
-                <td>{{ user.username }}</td>
                 <td>{{ user.gender }}</td>
                 <td>{{ user.age }}</td>
                 <td>{{ user.card }}</td>

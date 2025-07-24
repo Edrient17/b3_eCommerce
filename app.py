@@ -6,6 +6,7 @@ from datetime import datetime
 import delay_prediction 
 import pymysql.cursors
 import os
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -418,6 +419,48 @@ def add_to_cart(product_id):
 
     return redirect(url_for('product_detail', product_id=product_id))
 
+@app.route('/admin/delivery')
+def show_delivery_admin():
+    if 'user_id' not in session or session.get('username') != 'admin':
+        flash('접근 권한이 없습니다.', 'error')
+        return redirect(url_for('home'))
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT name, score FROM delivery")
+    delivery_list = cursor.fetchall()
+
+    print("✅ delivery_list =", delivery_list) 
+    
+    cursor.execute("SELECT id, username, gender, age, card, region, subregion FROM users")
+    user_list = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template('users.html', delivery_list=delivery_list, users=user_list)
+
+@app.route('/admin/delivery/update', methods=['POST'])
+def update_delivery_score():
+    if 'user_id' not in session or session.get('username') != 'admin':
+        flash('접근 권한이 없습니다.', 'error')
+        return redirect(url_for('home'))
+
+    name = request.form.get('name')
+    change = int(request.form.get('change', 0))
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("UPDATE delivery SET score = score + %s WHERE name = %s", (change, name))
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    flash(f"{name} 점수가 {change:+} 반영되었습니다.")
+    return redirect(url_for('show_delivery_admin'))
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

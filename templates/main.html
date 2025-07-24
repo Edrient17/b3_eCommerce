@@ -191,7 +191,7 @@
             {% if username %}
                 <span>{{ username }}님 환영합니다</span>
                 {% if username == 'admin' %}
-                    <a href="{{ url_for('users') }}">관리자 기능</a>
+                    <a href="{{ url_for('show_delivery_admin') }}">관리자 기능</a>
                 {% endif %}
                 <a href="{{ url_for('mypage') }}">My Page</a>
                 <a href="{{ url_for('logout') }}">로그아웃</a>
