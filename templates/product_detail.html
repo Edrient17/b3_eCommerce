@@ -163,6 +163,16 @@
             background-color: #1e4023;
         }
 
+        .best-brand-badge {
+        display: inline-block;
+        background-color: #dff5dc;
+        color: #2d5d34;
+        padding: 6px 12px;
+        font-weight: bold;
+        border-radius: 10px;
+        border: 1px solid #a8d5a2;
+        font-size: 16px;
+        }
 
     </style>
 </head>
@@ -182,7 +192,7 @@
         <h1>{{ product['name'] }}</h1>
         <div style="display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin-bottom: 20px;">
             {% if is_best_brand %}
-                <div>🌟 우수 브랜드</div>
+                <div class="best-brand-badge">🌟 우수 브랜드</div>
             {% endif %}
         </div>
 
@@ -219,7 +229,7 @@
 
         <div class="related-section">
             {% if low_delay_products|length > 0 %}
-                <h3>📦 배송 지연 가능성이 낮은 유사 상품!</h3>
+                <h3>📦 당일 배송 가능! 이 상품은 어떠세요?</h3>
                 <div class="related-list">
                     {% for p in low_delay_products %}
                     <div class="related-item">
@@ -227,7 +237,7 @@
                             <img src="{{ url_for('static', filename='images/' + p.product_id + '.jpg') }}">
                             <div>{{ p.name }}</div>
                             <div>{{ "{:,.0f}".format(p.price) }} 원</div>
-                            <div style="font-size: 13px; color: #888;">지연율: {{ p.delay_prob }}%</div>
+                            <!-- <div style="font-size: 13px; color: #888;">지연율: {{ p.delay_prob }}%</div> -->
                         </a>
                     </div>
                     {% endfor %}
