@@ -242,7 +242,7 @@
                     </div>
                     {% endfor %}
                 </div>
-            {% else %}
+            {% elif delay_prob is defined and delay_prob >= 30 %}
                 <h3>📦 유사한 저지연 상품을 찾지 못했습니다.</h3>
             {% endif %}
         </div>
