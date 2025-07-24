@@ -433,7 +433,7 @@ def show_delivery_admin():
 
     print("✅ delivery_list =", delivery_list) 
     
-    cursor.execute("SELECT id, username, gender, age, card, region, subregion FROM users")
+    cursor.execute("SELECT id, username, gender, age, card, region, subregion, recency FROM users")
     user_list = cursor.fetchall()
 
     cursor.close()

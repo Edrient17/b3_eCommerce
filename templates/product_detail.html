@@ -226,6 +226,8 @@
             </form>
             <a href="{{ url_for('wishlist') }}" class="view-cart">🧺 장바구니 보기</a>
         </div>
+        
+        <a href="{{ url_for('home') }}" class="back">← 메인으로 돌아가기</a>
 
         <div class="related-section">
             {% if low_delay_products|length > 0 %}
