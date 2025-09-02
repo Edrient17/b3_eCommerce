@@ -1,1 +1,3 @@
-# b3_eCommerce
+# e-commerce project
+
+친환경 제품 및 신선 제품을 판매하는 회사의 수익 향상 방안을 마련하는 프로젝트 입니다.
